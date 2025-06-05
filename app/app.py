@@ -17,7 +17,7 @@ app.secret_key = 'your-secret-key-change-this'
 class VideoAnnotationTool:
     def __init__(self):
         self.data_dir = './data'
-        self.metadata_file = os.path.join(self.data_dir, 'metadata_sample.tsv')
+        self.metadata_file = os.path.join(self.data_dir, 'metadata_sample2.tsv')
         self.content_annotations_file = os.path.join(self.data_dir, 'content_annotations.tsv')
         self.format_annotations_file = os.path.join(self.data_dir, 'format_annotations.tsv')
         self.progress_file = os.path.join(self.data_dir, 'annotation_progress.json')
