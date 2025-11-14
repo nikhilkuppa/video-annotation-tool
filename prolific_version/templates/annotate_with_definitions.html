@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Video Annotation Tool</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+    
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: #0f0f0f;
+                color: #ffffff;
+                line-height: 1.6;
+                overflow-x: hidden;
+            }
+    
+            .container {
+                display: flex;
+                height: 100vh;
+                max-width: 2200px;
+                margin: 0 auto;
+            }
+    
+            /* Header */
+            .header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: #1a1a1a;
+                padding: 15px 30px;
+                border-bottom: 2px solid #333;
+                z-index: 1000;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+    
+            .header h1 {
+                color: #00ff88;
+                font-size: 1.8rem;
+                font-weight: 300;
+            }
+    
+            .progress-info {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+    
+            .progress-bar {
+                width: 200px;
+                height: 8px;
+                background: #333;
+                border-radius: 4px;
+                overflow: hidden;
+            }
+    
+            .progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #00ff88, #00cc6a);
+                transition: width 0.3s ease;
+            }
+    
+            .progress-text {
+                color: #ccc;
+                font-size: 0.9rem;
+            }
+    
+            /* Main Content */
+            .main-content {
+                display: flex;
+                width: 100%;
+                margin-top: 160px;
+                padding: 20px;
+                gap: 20px;
+                height: calc(100vh - 160px);
+            }
+    
+            /* Video Section */
+            .video-section {
+                flex: 1.5;
+                max-width: 50%;
+                overflow-y: auto;
+            }
+    
+            .video-container {
+                position: relative;
+                background: #000;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            }
+    
+            .video-container iframe {
+                width: 100%;
+                height: 400px;
+                border: none;
+            }
+    
+            .video-info {
+                padding: 15px;
+                background: #1a1a1a;
+                border-radius: 0 0 12px 12px;
+            }
+    
+            .video-title {
+                font-size: 1.1rem;
+                color: #ffffff;
+                margin-bottom: 8px;
+                line-height: 1.4;
+            }
+    
+            .video-url {
+                color: #888;
+                font-size: 0.8rem;
+                word-break: break-all;
+            }
+    
+            /* Simplified Instructions Below Video */
+            .simplified-instructions {
+                margin-top: 20px;
+                background: #1a1a1a;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+    
+            .instruction-box {
+                padding: 15px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+                border-left: 4px solid #007bff;
+            }
+    
+            .instruction-box.overview {
+                background-color: #1a1a1a;
+                border-left-color: #00ff88;
+            }
+    
+            .instruction-box.important {
+                background-color: #1a1a1a;
+                border-left-color: #ffc107;
+            }
+    
+            .instruction-box h3 {
+                margin-top: 0;
+                margin-bottom: 10px;
+                font-size: 1rem;
+                font-weight: 600;
+            }
+    
+            .instruction-box.overview h3 {
+                color: #00ff88;
+            }
+    
+            .instruction-box.important h3 {
+                color: #ffde7c;
+            }
+    
+            .instruction-box p {
+                margin-bottom: 8px;
+                font-size: 0.9rem;
+                line-height: 1.4;
+                color: #ccc;
+            }
+    
+            .instruction-box ul {
+                margin-bottom: 8px;
+                padding-left: 18px;
+            }
+    
+            .instruction-box li {
+                margin-bottom: 6px;
+                font-size: 0.9rem;
+                line-height: 1.3;
+                color: #ccc;
+            }
+    
+            /* Annotation Section - Enhanced height */
+            .annotation-section {
+                flex: 1;
+                max-width: 35%;
+                background: #1a1a1a;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                height: fit-content;
+                max-height: calc(100vh - 200px);
+                overflow: hidden;
+            }
+    
+            .content-row, .format-row {
+                display: flex;
+                gap: 10px;
+                flex: 1;
+            }
+    
+            .content-row .annotation-category,
+            .format-row .annotation-category {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+            }
+    
+            /* Fix for annotation category to work better with scrolling */
+            .annotation-category {
+                margin-bottom: 0;
+                /* Add this to ensure proper height calculation */
+                display: flex;
+                flex-direction: column;
+                min-height: 0; /* This is crucial for flex children to scroll properly */
+            }
+    
+            .category-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+    
+            .category-title {
+                font-size: 1rem;
+                font-weight: 500;
+            }
+    
+            /* Content titles remain green */
+            .content-row .category-title {
+                color: whitesmoke;
+            }
+    
+            /* Format titles changed to white */
+            .format-row .category-title {
+                color: #ffffff;
+            }
+    
+            .selection-count {
+                background: #333;
+                color: #ccc;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 0.8rem;
+            }
+    
+            /* Fix for Domain Structure - CORRECTED SCROLLING */
+            .domain-container {
+                height: 300px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                border: 1px solid #333;
+                border-radius: 8px;
+                background: #222;
+                /* Remove flex: 1 - this was causing the issue */
+                /* Add specific width to prevent flex issues */
+                width: 100%;
+                /* Key fix: ensure the container can scroll its content */
+                scrollbar-width: thin;
+                scrollbar-color: #555 #1a1a1a;
+                /* Add this to ensure proper scrolling behavior */
+                contain: layout style;
+            }
+    
+            .domain-item {
+                border-bottom: 1px solid #333;
+                /* Remove any height constraints that might prevent scrolling */
+            }
+    
+            .domain-item:last-child {
+                border-bottom: none;
+            }
+    
+            .domain-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 10px;
+                background: #333;
+                cursor: pointer;
+                transition: background 0.2s ease;
+                user-select: none;
+                font-weight: 600;
+                color: whitesmoke;
+                font-size: 0.85rem;
+                /* Ensure header doesn't interfere with scrolling */
+                position: relative;
+                z-index: 1;
+            }
+    
+            .domain-header:hover {
+                background: #444;
+            }
+    
+            .domain-header.expanded {
+                background: #444;
+                border-bottom: 1px solid #555;
+            }
+    
+            .domain-name {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+    
+            .domain-expand-icon {
+                color: #00ff88;
+                font-size: 0.8rem;
+                transition: transform 0.2s ease;
+            }
+    
+            .domain-expand-icon.expanded {
+                transform: rotate(180deg);
+            }
+    
+            .domain-content {
+                display: none;
+                background: #1a1a1a;
+                /* Allow content to expand naturally */
+                min-height: 0;
+            }
+    
+            .domain-content.expanded {
+                display: block;
+            }
+    
+            
+            /* Fix for Hierarchical Structure - CORRECTED SCROLLING */
+            .hierarchy-container {
+                height: 300px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                border: 1px solid #333;
+                border-radius: 8px;
+                background: #222;
+                /* Remove flex: 1 - this was causing the issue */
+                /* Add specific width to prevent flex issues */
+                width: 100%;
+                /* Key fix: ensure the container can scroll its content */
+                scrollbar-width: thin;
+                scrollbar-color: #555 #1a1a1a;
+                /* Add this to ensure proper scrolling behavior */
+                contain: layout style;
+            }
+    
+            .hierarchy-item {
+                border-bottom: 1px solid #333;
+                /* Remove any height constraints that might prevent scrolling */
+            }
+    
+            .hierarchy-item:last-child {
+                border-bottom: none;
+            }
+    
+            .hierarchy-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 12px;
+                background: #2a2a2a;
+                cursor: pointer;
+                transition: background 0.2s ease;
+                user-select: none;
+                position: relative;
+                margin-left: 10px;
+                /* Ensure header doesn't interfere with scrolling */
+                z-index: 1;
+            }
+    
+            .hierarchy-header:hover {
+                background: #333;
+            }
+    
+            .hierarchy-header.expanded {
+                background: #333;
+                border-bottom: 1px solid #444;
+            }
+    
+            .hierarchy-name {
+                font-weight: 500;
+                color: #fff;
+                font-size: 0.9rem;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            
+/* Ensure domain and hierarchy items don't interfere with scrolling */
+            .domain-item,
+            .hierarchy-item {
+                border-bottom: 1px solid #333;
+                /* Remove any height constraints that might prevent scrolling */
+                flex-shrink: 0; /* Prevent items from shrinking */
+            }
+    
+            .info-icon {
+                color: #00ff88;
+                font-size: 0.7rem;
+                cursor: help;
+                padding: 2px;
+                border-radius: 50%;
+                background: #444;
+                width: 14px;
+                height: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+    
+            .info-icon:hover {
+                color: #00ff88;
+                background: #555;
+            }
+    
+            .hierarchy-count {
+                background: #444;
+                color: #ccc;
+                padding: 2px 6px;
+                border-radius: 12px;
+                font-size: 0.7rem;
+            }
+    
+            .expand-icon {
+                color: #888;
+                font-size: 0.8rem;
+                transition: transform 0.2s ease;
+            }
+    
+            .expand-icon.expanded {
+                transform: rotate(180deg);
+            }
+    
+            .labels-container {
+                display: none;
+                padding: 6px 8px;
+                background: #1a1a1a;
+                margin-left: 20px;
+                /* Allow labels container to expand naturally */
+                min-height: 0;
+            }
+    
+            .labels-container.expanded {
+                display: block;
+            }
+    
+            .labels-grid {
+                display: grid;
+                grid-template-columns: 1fr;
+                gap: 4px;
+            }
+    
+            .label-item {
+                display: flex;
+                align-items: center;
+                padding: 6px 8px;
+                background: #2a2a2a;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: 1px solid transparent;
+                font-size: 0.85rem;
+            }
+    
+            .label-item:hover {
+                background: #333;
+                border-color: #555;
+            }
+    
+            .label-item.selected {
+                background: #00ff8820;
+                border-color: #00ff88;
+            }
+    
+            .label-item input[type="radio"] {
+                margin-right: 8px;
+                accent-color: #00ff88;
+                cursor: pointer;
+            }
+    
+            .label-text {
+                font-size: 0.85rem;
+                color: #ddd;
+                user-select: none;
+                flex: 1;
+                cursor: pointer;
+            }
+    
+            /* Search functionality */
+            .search-box {
+                width: 100%;
+                padding: 6px 10px;
+                background: #2a2a2a;
+                border: 1px solid #444;
+                border-radius: 6px;
+                color: #fff;
+                font-size: 0.8rem;
+                margin-bottom: 8px;
+            }
+    
+            .search-box:focus {
+                outline: none;
+                border-color: #00ff88;
+                box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+            }
+    
+            /* Selected labels display */
+            .selected-labels {
+                margin-top: 8px;
+                padding: 8px;
+                background: #2a2a2a;
+                border-radius: 6px;
+                border: 1px solid #333;
+            }
+    
+            .selected-labels-title {
+                font-size: 0.75rem;
+                color: #888;
+                margin-bottom: 4px;
+            }
+    
+            .selected-label-tag {
+                display: inline-block;
+                background: #00ff8820;
+                color: #00ff88;
+                padding: 3px 6px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                margin: 2px;
+                border: 1px solid #00ff88;
+            }
+    
+            .selected-label-tag .hierarchy-part {
+                color: #888;
+                font-size: 0.7rem;
+            }
+    
+            /* Definitions Panel */
+            .definitions-panel {
+                flex: 0.8;
+                max-width: 25%;
+                background: #1a1a1a;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+                max-height: calc(100vh - 200px);
+                overflow: hidden;
+            }
+    
+            .definitions-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+    
+            .definitions-title {
+                color: #00ff88;
+                font-size: 1.1rem;
+                font-weight: 500;
+            }
+    
+            .definitions-content {
+                overflow-y: auto;
+                flex: 1;
+                padding-right: 5px;
+            }
+    
+            .definitions-content::-webkit-scrollbar {
+                width: 4px;
+            }
+    
+            .definitions-content::-webkit-scrollbar-track {
+                background: #1a1a1a;
+            }
+    
+            .definitions-content::-webkit-scrollbar-thumb {
+                background: #555;
+                border-radius: 2px;
+            }
+    
+            .definitions-search {
+                width: 100%;
+                padding: 8px 10px;
+                background: #2a2a2a;
+                border: 1px solid #444;
+                border-radius: 6px;
+                color: #fff;
+                font-size: 0.85rem;
+                margin-bottom: 15px;
+            }
+    
+            .definitions-search:focus {
+                outline: none;
+                border-color: #00ff88;
+                box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+            }
+    
+            .definition-section {
+                margin-bottom: 20px;
+            }
+    
+            .definition-section-title {
+                color: #ff9900;
+                font-size: 1rem;
+                font-weight: 500;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #333;
+                padding-bottom: 5px;
+            }
+    
+            .definitions-row {
+                display: flex;
+                gap: 15px;
+                height: auto;
+            }
+    
+            .definitions-column {
+                flex: 1;
+                min-width: 0;
+            }
+    
+            .definitions-column-title {
+                color: #00ff88;
+                font-size: 0.85rem;
+                font-weight: 500;
+                margin-bottom: 8px;
+                text-align: center;
+                background: #2a2a2a;
+                padding: 6px;
+                border-radius: 4px;
+                position: sticky;
+                top: 0;
+                z-index: 10;
+            }
+    
+            .definition-item {
+                margin-bottom: 10px;
+                padding: 10px;
+                background: #2a2a2a;
+                border-radius: 6px;
+                border-left: 3px solid #555;
+                transition: border-color 0.2s ease;
+            }
+    
+            .definition-item.active {
+                border-left-color: #00ff88;
+                background: #2a2a2a;
+            }
+    
+            .definition-label {
+                font-weight: 600;
+                color: #fff;
+                margin-bottom: 4px;
+                font-size: 0.8rem;
+            }
+    
+            .definition-hierarchy {
+                color: #888;
+                font-size: 0.7rem;
+                margin-bottom: 6px;
+            }
+    
+            .definition-text {
+                color: #ccc;
+                font-size: 0.75rem;
+                line-height: 1.4;
+            }
+    
+            /* Tooltip */
+            .tooltip {
+                position: absolute;
+                background: #2a2a2a;
+                color: #fff;
+                padding: 8px 10px;
+                border-radius: 6px;
+                font-size: 0.8rem;
+                max-width: 300px;
+                z-index: 1001;
+                border: 1px solid #555;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+            }
+    
+            .tooltip.show {
+                opacity: 1;
+            }
+    
+            .tooltip-label {
+                font-weight: 600;
+                color: #00ff88;
+                margin-bottom: 4px;
+            }
+    
+            .tooltip-hierarchy {
+                color: #ff9900;
+                font-size: 0.7rem;
+                margin-bottom: 4px;
+            }
+    
+            .tooltip-text {
+                color: #ccc;
+                line-height: 1.3;
+            }
+    
+            /* Submit Section */
+            .submit-section {
+                margin-top: 20px;
+                padding-top: 15px;
+                border-top: 1px solid #333;
+            }
+    
+            .submit-btn {
+                width: 100%;
+                padding: 12px;
+                background: linear-gradient(135deg, #00ff88, #00cc6a);
+                color: #000;
+                border: none;
+                border-radius: 8px;
+                font-size: 0.95rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+    
+            .submit-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+            }
+    
+            .submit-btn:disabled {
+                background: #333;
+                color: #666;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+    
+            .validation-message {
+                margin-top: 10px;
+                padding: 8px;
+                border-radius: 6px;
+                font-size: 0.85rem;
+                display: none;
+            }
+    
+            .validation-message.error {
+                background: #ff445540;
+                border: 1px solid #ff4455;
+                color: #ff8899;
+            }
+    
+            .validation-message.success {
+                background: #00ff8840;
+                border: 1px solid #00ff88;
+                color: #88ffaa;
+            }
+    
+            /* Navigation */
+            .navigation {
+                display: flex;
+                gap: 8px;
+                margin-top: 10px;
+            }
+    
+            .nav-btn {
+                flex: 1;
+                padding: 8px;
+                background: #333;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.8rem;
+                transition: background 0.2s ease;
+            }
+    
+            .nav-btn:hover {
+                background: #444;
+            }
+    
+            .nav-btn:disabled {
+                background: #222;
+                color: #666;
+                cursor: not-allowed;
+            }
+    
+            /* ENHANCED SCROLLBAR STYLING */
+            .hierarchy-container::-webkit-scrollbar,
+            .domain-container::-webkit-scrollbar {
+                width: 6px;
+            }
+    
+            .hierarchy-container::-webkit-scrollbar-track,
+            .domain-container::-webkit-scrollbar-track {
+                background: #1a1a1a;
+                border-radius: 3px;
+            }
+    
+            .hierarchy-container::-webkit-scrollbar-thumb,
+            .domain-container::-webkit-scrollbar-thumb {
+                background: #555;
+                border-radius: 3px;
+                border: 1px solid #333;
+            }
+    
+            .hierarchy-container::-webkit-scrollbar-thumb:hover,
+            .domain-container::-webkit-scrollbar-thumb:hover {
+                background: #666;
+            }
+    
+            .definitions-content::-webkit-scrollbar {
+                width: 4px;
+            }
+    
+            .definitions-content::-webkit-scrollbar-track {
+                background: #1a1a1a;
+            }
+    
+            .definitions-content::-webkit-scrollbar-thumb {
+                background: #555;
+                border-radius: 2px;
+            }
+
+            /* Additional fix for the content and format rows */
+            .content-row .annotation-category,
+            .format-row .annotation-category {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-height: 0; /* Critical for nested flex scrolling */
+                min-width: 0; /* Prevent overflow issues */
+            }
+
+            /* Replace the existing CSS for these classes with the fixed versions below */
+
+/* Fix for Domain Structure - CORRECTED SCROLLING */
+.domain-container {
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: #222;
+    flex: 1; /* Keep flex: 1 for layout but fix the scrolling */
+    /* Key fix: ensure the container can scroll its content */
+    scrollbar-width: thin;
+    scrollbar-color: #555 #1a1a1a;
+    /* Add this to ensure proper scrolling behavior */
+    min-height: 300px; /* Ensure minimum height for scrolling */
+}
+
+/* Fix for Hierarchical Structure - CORRECTED SCROLLING */
+.hierarchy-container {
+    height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #333;
+    border-radius: 8px;
+    background: #222;
+    flex: 1; /* Keep flex: 1 for layout but fix the scrolling */
+    /* Key fix: ensure the container can scroll its content */
+    scrollbar-width: thin;
+    scrollbar-color: #555 #1a1a1a;
+    /* Add this to ensure proper scrolling behavior */
+    min-height: 300px; /* Ensure minimum height for scrolling */
+}
+
+/* Fix for annotation category to work better with scrolling */
+.annotation-category {
+    margin-bottom: 0;
+    /* Add this to ensure proper height calculation */
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* This is crucial for flex children to scroll properly */
+}
+
+/* Ensure domain and hierarchy items don't interfere with scrolling */
+.domain-item,
+.hierarchy-item {
+    border-bottom: 1px solid #333;
+    /* Remove any height constraints that might prevent scrolling */
+    flex-shrink: 0; /* Prevent items from shrinking */
+}
+
+/* Additional fix for the content and format rows */
+.content-row .annotation-category,
+.format-row .annotation-category {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0; /* Critical for nested flex scrolling */
+    min-width: 0; /* Prevent overflow issues */
+}
+
+/* Fix for annotation section to ensure submit button is visible */
+.annotation-section {
+    flex: 1;
+    max-width: 35%;
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: fit-content;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto; /* Allow the entire section to scroll if needed */
+}
+    
+            /* Responsive Design */
+            @media (max-width: 1400px) {
+                .main-content {
+                    flex-direction: column;
+                    height: auto;
+                    max-height: none;
+                }
+    
+                .video-section, .annotation-section, .definitions-panel {
+                    max-width: 100%;
+                    max-height: none;
+                }
+    
+                .definitions-panel {
+                    order: -1;
+                    max-height: 400px;
+                }
+    
+                .annotation-section {
+                    max-height: none;
+                }
+            }
+    
+            @media (max-width: 768px) {
+                .content-row, .format-row {
+                    flex-direction: column;
+                }
+    
+                .domain-container, .hierarchy-container {
+                    height: 200px;
+                }
+            }
+        </style>
+    </head>
+<body>
+    <div class="header">
+        <div>
+            <h1>Content × Format Annotations</h1>
+            <p style="color: whitesmoke;"><strong>Watch</strong> the video to get context. --> <strong>Explore</strong> the Content and Format labels available below. --> <strong>Choose</strong> top 2 most prevalent options for Content. --> <strong>Choose</strong> top 2 most prevalent options for Format.</p>
+        </div>
+        <div>
+            <div class="progress-info">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ video.progress.percentage }}%"></div>
+                </div>
+                <div class="progress-text">{{ video.progress.current }} / {{ video.progress.total }}</div>
+            </div>
+        </div>
+    </div>
+    <!-- Tooltip element -->
+    <div class="tooltip" id="tooltip">
+        <div class="tooltip-label"></div>
+        <div class="tooltip-hierarchy"></div>
+        <div class="tooltip-text"></div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            
+            <div class="video-section">
+                <div class="video-container">
+                    <iframe src="{{ video.embed_url }}" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">{{ video.title }}</div>
+                    <div class="video-url">{{ video.url }}</div>
+                </div>
+
+                <!-- Simplified Instructions -->
+                <div class="simplified-instructions">
+                    <div class="instruction-box overview">
+                        <h3>🎯 Task Goal</h3>
+                        <p><strong>Watch the entire video</strong> and select exactly 2 labels for both content and format:</p>
+                        <ul>
+                            <li><strong>Content:</strong> What topics or subjects are discussed in the video?</li>
+                            <li><strong>Format:</strong> How is the information presented visually?</li>
+                        </ul>
+                    </div>
+
+                    <div class="instruction-box important">
+                        <h3>💡 Key Points</h3>
+                        <ul>
+                            <li>Content = <em>What</em> the video is about (topics, subjects)</li>
+                            <li>Format = <em>How</em> it's presented (visual style, delivery method)</li>
+                            <li>Refer to the definitions panel on the right when unsure</li>
+                            <li>Choose the 2 most dominant/prominent labels in each category</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="annotation-section">
+                <div class="format-title" style="color: whitesmoke; font-weight: bold;">Annotation Section</div>
+                <div class="format-title" style="color: #00cc6a;">Select 2 most applicable Content Labels after watching the video.</div>
+                <div class="content-row">
+                    <div class="annotation-category">
+                        <div class="category-header">
+                            <div class="category-title">Content Option 1</div>
+                            <div class="selection-count" id="content1-count">0 / 1</div>
+                        </div>
+                        <input type="text" class="search-box" id="content1-search" placeholder="Search domains, hierarchies or labels...">
+                        <div class="domain-container" id="content1-domains">
+                            {% for domain, hierarchies in content_hierarchies.items() %}
+                            <div class="domain-item">
+                                <div class="domain-header" onclick="toggleDomain('content1', '{{ domain }}')">
+                                    <div class="domain-name">{{ domain }}</div>
+                                    <div class="domain-expand-icon" id="content1-{{ domain }}-icon">▼</div>
+                                </div>
+                                <div class="domain-content" id="content1-{{ domain }}-content">
+                                    {% for hierarchy, labels in hierarchies.items() %}
+                                    <div class="hierarchy-item">
+                                        <div class="hierarchy-header" onclick="toggleHierarchy('content1', '{{ domain }}', '{{ hierarchy }}')">
+                                            <div class="hierarchy-name">
+                                                {{ hierarchy }}
+                                                <span class="info-icon" data-category="content" data-hierarchy="{{ hierarchy }}" data-type="hierarchy" onclick="event.stopPropagation()">i</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 6px;">
+                                                <div class="hierarchy-count">{{ labels|length }}</div>
+                                                <div class="expand-icon" id="content1-{{ domain }}-{{ hierarchy }}-icon">▼</div>
+                                            </div>
+                                        </div>
+                                        <div class="labels-container" id="content1-{{ domain }}-{{ hierarchy }}-labels">
+                                            <div class="labels-grid">
+                                                {% for label in labels %}
+                                                <div class="label-item" onclick="selectHierarchicalLabel(this, 'content1', '{{ hierarchy }}', '{{ label }}', '{{ domain }}')">
+                                                    <input type="radio" name="content1" value="{{ label }}" id="content1-{{ domain }}-{{ hierarchy }}-{{ loop.index }}" onclick="event.stopPropagation();">
+                                                    <label class="label-text" for="content1-{{ domain }}-{{ hierarchy }}-{{ loop.index }}">{{ label }}</label>
+                                                    <span class="info-icon" data-category="content" data-label="{{ label }}" data-type="label" onclick="event.stopPropagation()">i</span>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="selected-labels" id="content1-selected" style="display: none;">
+                            <div class="selected-labels-title">Selected:</div>
+                            <div id="content1-selected-tags"></div>
+                        </div>
+                    </div>
+
+                    <div class="annotation-category">
+                        <div class="category-header">
+                            <div class="category-title">Content Option 2</div>
+                            <div class="selection-count" id="content2-count">0 / 1</div>
+                        </div>
+                        <input type="text" class="search-box" id="content2-search" placeholder="Search domains, hierarchies or labels...">
+                        <div class="domain-container" id="content2-domains">
+                            {% for domain, hierarchies in content_hierarchies.items() %}
+                            <div class="domain-item">
+                                <div class="domain-header" onclick="toggleDomain('content2', '{{ domain }}')">
+                                    <div class="domain-name">{{ domain }}</div>
+                                    <div class="domain-expand-icon" id="content2-{{ domain }}-icon">▼</div>
+                                </div>
+                                <div class="domain-content" id="content2-{{ domain }}-content">
+                                    {% for hierarchy, labels in hierarchies.items() %}
+                                    <div class="hierarchy-item">
+                                        <div class="hierarchy-header" onclick="toggleHierarchy('content2', '{{ domain }}', '{{ hierarchy }}')">
+                                            <div class="hierarchy-name">
+                                                {{ hierarchy }}
+                                                <span class="info-icon" data-category="content" data-hierarchy="{{ hierarchy }}" data-type="hierarchy" onclick="event.stopPropagation()">i</span>
+                                            </div>
+                                            <div style="display: flex; align-items: center; gap: 6px;">
+                                                <div class="hierarchy-count">{{ labels|length }}</div>
+                                                <div class="expand-icon" id="content2-{{ domain }}-{{ hierarchy }}-icon">▼</div>
+                                            </div>
+                                        </div>
+                                        <div class="labels-container" id="content2-{{ domain }}-{{ hierarchy }}-labels">
+                                            <div class="labels-grid">
+                                                {% for label in labels %}
+                                                <div class="label-item" onclick="selectHierarchicalLabel(this, 'content2', '{{ hierarchy }}', '{{ label }}', '{{ domain }}')">
+                                                    <input type="radio" name="content2" value="{{ label }}" id="content2-{{ domain }}-{{ hierarchy }}-{{ loop.index }}" onclick="event.stopPropagation();">
+                                                    <label class="label-text" for="content2-{{ domain }}-{{ hierarchy }}-{{ loop.index }}">{{ label }}</label>
+                                                    <span class="info-icon" data-category="content" data-label="{{ label }}" data-type="label" onclick="event.stopPropagation()">i</span>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="selected-labels" id="content2-selected" style="display: none;">
+                            <div class="selected-labels-title">Selected:</div>
+                            <div id="content2-selected-tags"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="format-title" style="color: #00cc6a;">Select 2 most applicable <strong>Format Labels</strong> after watching the video. <br>- Hover over the info button for more information.</div>
+                <div class="format-row">
+                    <div class="annotation-category">
+                        <div class="category-header">
+                            <div class="category-title">Format Option 1</div>
+                            <div class="selection-count" id="format1-count">0 / 1</div>
+                        </div>
+                        <input type="text" class="search-box" id="format1-search" placeholder="Search hierarchies or labels...">
+                        <div class="hierarchy-container" id="format1-hierarchies">
+                            {% for hierarchy, labels in format_hierarchies.items() %}
+                            <div class="hierarchy-item">
+                                <div class="hierarchy-header" onclick="toggleFormatHierarchy('format1', '{{ hierarchy }}')">
+                                    <div class="hierarchy-name">
+                                        {{ hierarchy }}
+                                        <span class="info-icon" data-category="format" data-hierarchy="{{ hierarchy }}" data-type="hierarchy" onclick="event.stopPropagation()">i</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div class="hierarchy-count">{{ labels|length }}</div>
+                                        <div class="expand-icon" id="format1-{{ hierarchy }}-icon">▼</div>
+                                    </div>
+                                </div>
+                                <div class="labels-container" id="format1-{{ hierarchy }}-labels">
+                                    <div class="labels-grid">
+                                        {% for label in labels %}
+                                        <div class="label-item" onclick="selectHierarchicalLabel(this, 'format1', '{{ hierarchy }}', '{{ label }}')">
+                                            <input type="radio" name="format1" value="{{ label }}" id="format1-{{ hierarchy }}-{{ loop.index }}" onclick="event.stopPropagation();">
+                                            <label class="label-text" for="format1-{{ hierarchy }}-{{ loop.index }}">{{ label }}</label>
+                                            <span class="info-icon" data-category="format" data-label="{{ label }}" data-type="label" onclick="event.stopPropagation()">i</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="selected-labels" id="format1-selected" style="display: none;">
+                            <div class="selected-labels-title">Selected:</div>
+                            <div id="format1-selected-tags"></div>
+                        </div>
+                    </div>
+
+                    <div class="annotation-category">
+                        <div class="category-header">
+                            <div class="category-title">Format Option 2</div>
+                            <div class="selection-count" id="format2-count">0 / 1</div>
+                        </div>
+                        <input type="text" class="search-box" id="format2-search" placeholder="Search hierarchies or labels...">
+                        <div class="hierarchy-container" id="format2-hierarchies">
+                            {% for hierarchy, labels in format_hierarchies.items() %}
+                            <div class="hierarchy-item">
+                                <div class="hierarchy-header" onclick="toggleFormatHierarchy('format2', '{{ hierarchy }}')">
+                                    <div class="hierarchy-name">
+                                        {{ hierarchy }}
+                                        <span class="info-icon" data-category="format" data-hierarchy="{{ hierarchy }}" data-type="hierarchy" onclick="event.stopPropagation()">i</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div class="hierarchy-count">{{ labels|length }}</div>
+                                        <div class="expand-icon" id="format2-{{ hierarchy }}-icon">▼</div>
+                                    </div>
+                                </div>
+                                <div class="labels-container" id="format2-{{ hierarchy }}-labels">
+                                    <div class="labels-grid">
+                                        {% for label in labels %}
+                                        <div class="label-item" onclick="selectHierarchicalLabel(this, 'format2', '{{ hierarchy }}', '{{ label }}')">
+                                            <input type="radio" name="format2" value="{{ label }}" id="format2-{{ hierarchy }}-{{ loop.index }}" onclick="event.stopPropagation();">
+                                            <label class="label-text" for="format2-{{ hierarchy }}-{{ loop.index }}">{{ label }}</label>
+                                            <span class="info-icon" data-category="format" data-label="{{ label }}" data-type="label" onclick="event.stopPropagation()">i</span>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="selected-labels" id="format2-selected" style="display: none;">
+                            <div class="selected-labels-title">Selected:</div>
+                            <div id="format2-selected-tags"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button class="submit-btn" id="submit-btn" onclick="submitAnnotation()">
+                        Submit Annotation
+                    </button>
+                    <div class="validation-message" id="validation-message"></div>
+
+                    <div class="navigation">
+                        <button class="nav-btn" onclick="previousVideo()" {% if video.progress.current <= 1 %}disabled{% endif %}>
+                            ← Previous
+                        </button>
+                        <button class="nav-btn" onclick="nextVideo()">
+                            Next →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Definitions Panel -->
+            <div class="definitions-panel">
+                <div class="definitions-header">
+                    <div class="definitions-title" style="color: #ffc107;;">Label Definitions</div>
+                </div>
+
+                <input type="text" class="definitions-search" id="definitions-search" placeholder="Search definitions...">
+
+                <div class="definitions-content" id="definitions-content">
+                    <div class="definition-section">
+                        <div class="definition-section-title">Selected Labels</div>
+                        <div id="selected-definitions">
+                            <div style="color: #888; font-size: 0.8rem; font-style: italic;">Select labels to see their definitions here</div>
+                        </div>
+                    </div>
+
+                    <div class="definition-section">
+                        <div class="definition-section-title">All Label Definitions</div>
+                        <div class="definitions-row">
+                            <div class="definitions-column">
+                                <div class="definitions-column-title">Content Labels</div>
+                                <div id="content-definitions">
+                                    {% for label, def_data in content_definitions.items() %}
+                                    <div class="definition-item" data-label="{{ label }}" data-hierarchy="{{ def_data.hierarchy }}">
+                                        <div class="definition-label">{{ label }}</div>
+                                        <div class="definition-hierarchy">{{ def_data.hierarchy }}</div>
+                                        <div class="definition-text">{{ def_data.label_definition }}</div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="definitions-column">
+                                <div class="definitions-column-title">Format Labels</div>
+                                <div id="format-definitions">
+                                    {% for label, def_data in format_definitions.items() %}
+                                    <div class="definition-item" data-label="{{ label }}" data-hierarchy="{{ def_data.hierarchy }}">
+                                        <div class="definition-label">{{ label }}</div>
+                                        <div class="definition-hierarchy">{{ def_data.hierarchy }}</div>
+                                        <div class="definition-text">{{ def_data.label_definition }}</div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store existing annotations data
+        const existingAnnotations = {{ existing_annotations | tojson }};
+
+        // Store definitions data
+        const contentDefinitions = {{ content_definitions | tojson }};
+        const formatDefinitions = {{ format_definitions | tojson }};
+
+        // Store Prolific PID
+        const prolificPID = '{{ prolific_pid }}';
+
+        // Track selections for each category with hierarchy information
+        let selections = {
+            content1: null,
+            content2: null,
+            format1: null,
+            format2: null
+        };
+
+        // Tooltip functionality
+        function showTooltip(event, category, identifier, type) {
+            const tooltip = document.getElementById('tooltip');
+            const definitions = category === 'content' ? contentDefinitions : formatDefinitions;
+
+            let definitionData;
+            if (type === 'label') {
+                definitionData = definitions[identifier];
+            } else if (type === 'hierarchy') {
+                // Find the first label in this hierarchy to get hierarchy definition
+                for (const [label, data] of Object.entries(definitions)) {
+                    if (data.hierarchy === identifier) {
+                        definitionData = data;
+                        break;
+                    }
+                }
+            }
+
+            if (definitionData) {
+                const labelElement = tooltip.querySelector('.tooltip-label');
+                const hierarchyElement = tooltip.querySelector('.tooltip-hierarchy');
+                const textElement = tooltip.querySelector('.tooltip-text');
+
+                if (type === 'label') {
+                    labelElement.textContent = identifier;
+                    hierarchyElement.textContent = `Hierarchy: ${definitionData.hierarchy}`;
+                    textElement.textContent = definitionData.label_definition;
+                } else {
+                    labelElement.textContent = `Hierarchy: ${identifier}`;
+                    hierarchyElement.textContent = '';
+                    textElement.textContent = definitionData.hierarchy_definition;
+                }
+
+                // Position tooltip
+                const rect = event.target.getBoundingClientRect();
+                tooltip.style.left = rect.right + 10 + 'px';
+                tooltip.style.top = rect.top + 'px';
+
+                // Adjust if tooltip goes off screen
+                const tooltipRect = tooltip.getBoundingClientRect();
+                if (tooltipRect.right > window.innerWidth) {
+                    tooltip.style.left = rect.left - tooltip.offsetWidth - 10 + 'px';
+                }
+                if (tooltipRect.bottom > window.innerHeight) {
+                    tooltip.style.top = window.innerHeight - tooltip.offsetHeight - 10 + 'px';
+                }
+
+                tooltip.classList.add('show');
+            }
+        }
+
+        function hideTooltip() {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.classList.remove('show');
+        }
+
+        // Add event listeners for tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            const infoIcons = document.querySelectorAll('.info-icon');
+            infoIcons.forEach(icon => {
+                icon.addEventListener('mouseenter', function(e) {
+                    e.stopPropagation();
+                    const category = this.getAttribute('data-category');
+                    const type = this.getAttribute('data-type');
+                    const identifier = this.getAttribute('data-label') || this.getAttribute('data-hierarchy');
+                    showTooltip(e, category, identifier, type);
+                });
+
+                icon.addEventListener('mouseleave', hideTooltip);
+            });
+        });
+
+        // Format hierarchy toggle functionality (two-level)
+        function toggleFormatHierarchy(category, hierarchy) {
+            const labelsContainer = document.getElementById(`${category}-${hierarchy}-labels`);
+            const icon = document.getElementById(`${category}-${hierarchy}-icon`);
+            const header = icon.closest('.hierarchy-header');
+
+            const isExpanded = labelsContainer.classList.contains('expanded');
+
+            if (isExpanded) {
+                labelsContainer.classList.remove('expanded');
+                icon.classList.remove('expanded');
+                header.classList.remove('expanded');
+            } else {
+                labelsContainer.classList.add('expanded');
+                icon.classList.add('expanded');
+                header.classList.add('expanded');
+            }
+        }
+
+        // Domain toggle functionality (three-level for content)
+        function toggleDomain(category, domain) {
+            const domainContent = document.getElementById(`${category}-${domain}-content`);
+            const icon = document.getElementById(`${category}-${domain}-icon`);
+            const header = icon.closest('.domain-header');
+
+            const isExpanded = domainContent.classList.contains('expanded');
+
+            if (isExpanded) {
+                domainContent.classList.remove('expanded');
+                icon.classList.remove('expanded');
+                header.classList.remove('expanded');
+            } else {
+                domainContent.classList.add('expanded');
+                icon.classList.add('expanded');
+                header.classList.add('expanded');
+            }
+        }
+
+        function toggleHierarchy(category, domain, hierarchy) {
+            const labelsContainer = document.getElementById(`${category}-${domain}-${hierarchy}-labels`);
+            const icon = document.getElementById(`${category}-${domain}-${hierarchy}-icon`);
+            const header = icon.closest('.hierarchy-header');
+
+            const isExpanded = labelsContainer.classList.contains('expanded');
+
+            if (isExpanded) {
+                labelsContainer.classList.remove('expanded');
+                icon.classList.remove('expanded');
+                header.classList.remove('expanded');
+            } else {
+                labelsContainer.classList.add('expanded');
+                icon.classList.add('expanded');
+                header.classList.add('expanded');
+            }
+        }
+
+        function selectHierarchicalLabel(element, category, hierarchy, label, upperHierarchy = null) {
+            const radio = element.querySelector('input[type="radio"]');
+
+            // Allow deselection if already selected
+            if (radio.checked) {
+                radio.checked = false;
+                element.classList.remove('selected');
+                selections[category] = null;
+            } else {
+                // Clear previous selection in this category
+                const allInCategory = document.querySelectorAll(`input[name="${category}"]`);
+                allInCategory.forEach(r => {
+                    r.checked = false;
+                    r.closest('.label-item').classList.remove('selected');
+                });
+
+                // Select this radio button
+                radio.checked = true;
+                element.classList.add('selected');
+                selections[category] = {
+                    label: label,
+                    hierarchy: hierarchy,
+                    upper_hierarchy: upperHierarchy
+                };
+            }
+
+            // Update displays
+            updateSelectionCount(category);
+            updateSelectedLabelsDisplay(category);
+            updateSelectedDefinitions();
+            updateSubmitButton();
+        }
+
+        function updateSelectionCount(category) {
+            const count = selections[category] ? 1 : 0;
+            document.getElementById(`${category}-count`).textContent = `${count} / 1`;
+        }
+
+        function updateSelectedLabelsDisplay(category) {
+            const selectedContainer = document.getElementById(`${category}-selected`);
+            const tagsContainer = document.getElementById(`${category}-selected-tags`);
+
+            if (selections[category]) {
+                const selection = selections[category];
+                tagsContainer.innerHTML = `
+                    <div class="selected-label-tag">
+                        ${selection.label}
+                        <div class="hierarchy-part">(${selection.hierarchy})</div>
+                    </div>
+                `;
+                selectedContainer.style.display = 'block';
+            } else {
+                selectedContainer.style.display = 'none';
+            }
+        }
+
+        function updateSelectedDefinitions() {
+            const selectedDefinitionsContainer = document.getElementById('selected-definitions');
+            const allSelections = [selections.content1, selections.content2, selections.format1, selections.format2].filter(Boolean);
+
+            if (allSelections.length === 0) {
+                selectedDefinitionsContainer.innerHTML = '<div style="color: #888; font-size: 0.8rem; font-style: italic;">Select labels to see their definitions here</div>';
+                return;
+            }
+
+            let html = '';
+            allSelections.forEach(selection => {
+                const category = contentDefinitions[selection.label] ? 'content' : 'format';
+                const definitions = category === 'content' ? contentDefinitions : formatDefinitions;
+                const definitionData = definitions[selection.label];
+
+                if (definitionData) {
+                    html += `
+                        <div class="definition-item active">
+                            <div class="definition-label">${selection.label}</div>
+                            <div class="definition-hierarchy">${selection.hierarchy}</div>
+                            <div class="definition-text">${definitionData.label_definition}</div>
+                        </div>
+                    `;
+                }
+            });
+
+            selectedDefinitionsContainer.innerHTML = html;
+        }
+
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById('submit-btn');
+
+            // Check if exactly 2 selections for both content and format
+            const contentCount = (selections.content1 ? 1 : 0) + (selections.content2 ? 1 : 0);
+            const formatCount = (selections.format1 ? 1 : 0) + (selections.format2 ? 1 : 0);
+
+            submitBtn.disabled = !(contentCount === 2 && formatCount === 2);
+        }
+
+        function showValidationMessage(type, message) {
+            const msgElement = document.getElementById('validation-message');
+            msgElement.className = `validation-message ${type}`;
+            msgElement.textContent = message;
+            msgElement.style.display = 'block';
+
+            setTimeout(() => {
+                msgElement.style.display = 'none';
+            }, 3000);
+        }
+
+        function submitAnnotation() {
+            // Collect selected labels with hierarchy information
+            const contentSelections = [selections.content1, selections.content2].filter(Boolean);
+            const formatSelections = [selections.format1, selections.format2].filter(Boolean);
+
+            if (contentSelections.length !== 2 || formatSelections.length !== 2) {
+                showValidationMessage('error', 'Please select exactly 2 labels for both content and format');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    video_id: '{{ video.Video }}',
+                    content_selections: contentSelections,
+                    format_selections: formatSelections,
+                    prolific_pid: prolificPID
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showValidationMessage('success', 'Annotation saved successfully! Moving to next video...');
+
+                    // Reset submit button
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Annotation';
+
+                    // Move to next video after a short delay
+                    setTimeout(() => {
+                        const currentIndex = {{ video.progress.current }} - 1;
+                        window.location.href = `/video/${currentIndex + 1}?PROLIFIC_PID=${prolificPID}`;
+                    }, 1000);
+                } else {
+                    showValidationMessage('error', data.error || 'Failed to save annotation');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Annotation';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showValidationMessage('error', 'Network error occurred');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Annotation';
+            });
+        }
+
+        function previousVideo() {
+            const currentIndex = {{ video.progress.current }} - 1;
+            if (currentIndex > 0) {
+                window.location.href = `/video/${currentIndex - 1}?PROLIFIC_PID=${prolificPID}`;
+            }
+        }
+
+        function nextVideo() {
+            // Check if current video has been annotated
+            const contentCount = (selections.content1 ? 1 : 0) + (selections.content2 ? 1 : 0);
+            const formatCount = (selections.format1 ? 1 : 0) + (selections.format2 ? 1 : 0);
+
+            if (contentCount !== 2 || formatCount !== 2) {
+                showValidationMessage('error', 'Please complete the annotation (select exactly 2 labels for each category) before moving to the next video');
+                return;
+            }
+
+            const currentIndex = {{ video.progress.current }} - 1;
+            window.location.href = `/video/${currentIndex + 1}?PROLIFIC_PID=${prolificPID}`;
+        }
+
+        // Load existing annotations if they exist
+        function loadExistingAnnotations() {
+            if (!existingAnnotations) return;
+
+            // Load content annotations
+            if (existingAnnotations.content.label_1) {
+                selectExistingLabel('content1', existingAnnotations.content.label_1, existingAnnotations.content.hierarchy_1);
+            }
+            if (existingAnnotations.content.label_2) {
+                selectExistingLabel('content2', existingAnnotations.content.label_2, existingAnnotations.content.hierarchy_2);
+            }
+
+            // Load format annotations
+            if (existingAnnotations.format.label_1) {
+                selectExistingLabel('format1', existingAnnotations.format.label_1, existingAnnotations.format.hierarchy_1);
+            }
+            if (existingAnnotations.format.label_2) {
+                selectExistingLabel('format2', existingAnnotations.format.label_2, existingAnnotations.format.hierarchy_2);
+            }
+        }
+
+        function selectExistingLabel(category, label, hierarchy) {
+            // Find the radio button for this label
+            const radioButtons = document.querySelectorAll(`input[name="${category}"]`);
+
+            radioButtons.forEach(radio => {
+                if (radio.value === label) {
+                    const labelItem = radio.closest('.label-item');
+
+                    // Select the radio button
+                    radio.checked = true;
+                    labelItem.classList.add('selected');
+
+                    // Update selections object
+                    selections[category] = {
+                        label: label,
+                        hierarchy: hierarchy
+                    };
+
+                    // Expand the hierarchy containing this label
+                    const hierarchyItem = radio.closest('.hierarchy-item');
+                    if (hierarchyItem) {
+                        const labelsContainer = hierarchyItem.querySelector('.labels-container');
+                        const icon = hierarchyItem.querySelector('.expand-icon');
+                        const header = hierarchyItem.querySelector('.hierarchy-header');
+
+                        if (labelsContainer && icon && header) {
+                            labelsContainer.classList.add('expanded');
+                            icon.classList.add('expanded');
+                            header.classList.add('expanded');
+                        }
+
+                        // For content labels, also expand the domain
+                        const domainItem = hierarchyItem.closest('.domain-item');
+                        if (domainItem) {
+                            const domainContent = domainItem.querySelector('.domain-content');
+                            const domainIcon = domainItem.querySelector('.domain-expand-icon');
+                            const domainHeader = domainItem.querySelector('.domain-header');
+
+                            if (domainContent && domainIcon && domainHeader) {
+                                domainContent.classList.add('expanded');
+                                domainIcon.classList.add('expanded');
+                                domainHeader.classList.add('expanded');
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Update displays
+            updateSelectionCount(category);
+            updateSelectedLabelsDisplay(category);
+        }
+
+        // Search functionality for format categories (two-level hierarchy)
+        function setupFormatSearch(searchId, containerId) {
+            const searchInput = document.getElementById(searchId);
+            const container = document.getElementById(containerId);
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const hierarchyItems = container.querySelectorAll('.hierarchy-item');
+
+                hierarchyItems.forEach(hierarchyItem => {
+                    const hierarchyHeader = hierarchyItem.querySelector('.hierarchy-name');
+                    const hierarchyName = hierarchyHeader.textContent.toLowerCase();
+                    const labels = hierarchyItem.querySelectorAll('.label-item');
+
+                    let hierarchyMatches = hierarchyName.includes(searchTerm);
+                    let hasMatchingLabels = false;
+
+                    // Check if any labels match
+                    labels.forEach(label => {
+                        const labelText = label.querySelector('.label-text').textContent.toLowerCase();
+                        const labelMatches = labelText.includes(searchTerm);
+
+                        if (labelMatches || hierarchyMatches) {
+                            label.style.display = 'flex';
+                            hasMatchingLabels = true;
+                        } else {
+                            label.style.display = 'none';
+                        }
+                    });
+
+                    // Show/hide entire hierarchy based on matches
+                    if (hierarchyMatches || hasMatchingLabels) {
+                        hierarchyItem.style.display = 'block';
+
+                        // Auto-expand if searching and there are matches
+                        if (searchTerm && hasMatchingLabels) {
+                            const labelsContainer = hierarchyItem.querySelector('.labels-container');
+                            const icon = hierarchyItem.querySelector('.expand-icon');
+                            const header = hierarchyItem.querySelector('.hierarchy-header');
+
+                            labelsContainer.classList.add('expanded');
+                            icon.classList.add('expanded');
+                            header.classList.add('expanded');
+                        }
+                    } else {
+                        hierarchyItem.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Search functionality for content categories (three-level hierarchy)
+        function setupHierarchicalSearch(searchId, containerId) {
+            const searchInput = document.getElementById(searchId);
+            const container = document.getElementById(containerId);
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const domainItems = container.querySelectorAll('.domain-item');
+
+                domainItems.forEach(domainItem => {
+                    const domainHeader = domainItem.querySelector('.domain-name');
+                    const domainName = domainHeader.textContent.toLowerCase();
+                    const hierarchyItems = domainItem.querySelectorAll('.hierarchy-item');
+
+                    let domainMatches = domainName.includes(searchTerm);
+                    let hasMatchingContent = false;
+
+                    hierarchyItems.forEach(hierarchyItem => {
+                        const hierarchyHeader = hierarchyItem.querySelector('.hierarchy-name');
+                        const hierarchyName = hierarchyHeader.textContent.toLowerCase();
+                        const labels = hierarchyItem.querySelectorAll('.label-item');
+
+                        let hierarchyMatches = hierarchyName.includes(searchTerm);
+                        let hasMatchingLabels = false;
+
+                        // Check if any labels match
+                        labels.forEach(label => {
+                            const labelText = label.querySelector('.label-text').textContent.toLowerCase();
+                            const labelMatches = labelText.includes(searchTerm);
+
+                            if (labelMatches || hierarchyMatches || domainMatches) {
+                                label.style.display = 'flex';
+                                hasMatchingLabels = true;
+                            } else {
+                                label.style.display = 'none';
+                            }
+                        });
+
+                        // Show/hide hierarchy based on matches
+                        if (hierarchyMatches || hasMatchingLabels || domainMatches) {
+                            hierarchyItem.style.display = 'block';
+                            hasMatchingContent = true;
+
+                            // Auto-expand if searching and there are matches
+                            if (searchTerm && hasMatchingLabels) {
+                                const labelsContainer = hierarchyItem.querySelector('.labels-container');
+                                const icon = hierarchyItem.querySelector('.expand-icon');
+                                const header = hierarchyItem.querySelector('.hierarchy-header');
+
+                                labelsContainer.classList.add('expanded');
+                                icon.classList.add('expanded');
+                                header.classList.add('expanded');
+                            }
+                        } else {
+                            hierarchyItem.style.display = 'none';
+                        }
+                    });
+
+                    // Show/hide entire domain based on matches
+                    if (domainMatches || hasMatchingContent) {
+                        domainItem.style.display = 'block';
+
+                        // Auto-expand domain if searching and there are matches
+                        if (searchTerm && hasMatchingContent) {
+                            const domainContent = domainItem.querySelector('.domain-content');
+                            const icon = domainItem.querySelector('.domain-expand-icon');
+                            const header = domainItem.querySelector('.domain-header');
+
+                            domainContent.classList.add('expanded');
+                            icon.classList.add('expanded');
+                            header.classList.add('expanded');
+                        }
+                    } else {
+                        domainItem.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Search functionality for definitions panel
+        function setupDefinitionsSearch() {
+            const searchInput = document.getElementById('definitions-search');
+            const definitionItems = document.querySelectorAll('.definition-item');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+
+                definitionItems.forEach(item => {
+                    const label = item.querySelector('.definition-label').textContent.toLowerCase();
+                    const hierarchy = item.querySelector('.definition-hierarchy').textContent.toLowerCase();
+                    const text = item.querySelector('.definition-text').textContent.toLowerCase();
+
+                    const matches = label.includes(searchTerm) ||
+                                  hierarchy.includes(searchTerm) ||
+                                  text.includes(searchTerm);
+
+                    item.style.display = matches ? 'block' : 'none';
+                });
+            });
+        }
+
+        // Initialize search functionality for all categories
+        document.addEventListener('DOMContentLoaded', function() {
+            setupHierarchicalSearch('content1-search', 'content1-domains');
+            setupHierarchicalSearch('content2-search', 'content2-domains');
+            setupFormatSearch('format1-search', 'format1-hierarchies');
+            setupFormatSearch('format2-search', 'format2-hierarchies');
+            setupDefinitionsSearch();
+
+            // Load existing annotations if they exist
+            loadExistingAnnotations();
+
+            // Update displays after loading existing annotations
+            updateSelectedDefinitions();
+            updateSubmitButton();
+
+            // Initialize all selection counts
+            ['content1', 'content2', 'format1', 'format2'].forEach(category => {
+                updateSelectionCount(category);
+            });
+        });
+    </script>
+</body>
+</html>

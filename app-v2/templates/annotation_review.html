@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annotation Review - Good or Bad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f0f;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 2200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            padding: 15px 30px;
+            border-bottom: 2px solid #333;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header h1 {
+            color: #00ff88;
+            font-size: 1.8rem;
+            font-weight: 300;
+        }
+
+        .progress-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00cc6a);
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: #ccc;
+            font-size: 0.9rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            width: 100%;
+            margin-top: 120px;
+            padding: 20px;
+            gap: 20px;
+        }
+
+        /* Video Section */
+        .video-section {
+            flex: 1.5;
+            max-width: 50%;
+        }
+
+        .video-container {
+            position: relative;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+        }
+
+        .video-info {
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .video-title {
+            font-size: 1.1rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .video-url {
+            color: #888;
+            font-size: 0.8rem;
+            word-break: break-all;
+        }
+
+        .ground-truth-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            border-left: 4px solid #ff9900;
+        }
+
+        .ground-truth-title {
+            color: #ff9900;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .ground-truth-labels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .ground-truth-tag {
+            background: #3a3a3a;
+            color: #ffcc99;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            border: 1px solid #ff9900;
+        }
+
+        /* Review Section - Simple Good/Bad */
+        .review-section {
+            flex: 1;
+            max-width: 35%;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .review-title {
+            font-size: 1.2rem;
+            color: #00ff88;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .review-description {
+            color: #ccc;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .review-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .review-btn {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background: #2a2a2a;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .review-btn:hover {
+            background: #333;
+            border-color: #555;
+        }
+
+        .review-btn.selected {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .review-btn.good.selected {
+            background: #00ff8820;
+            border-color: #00ff88;
+            color: #00ff88;
+        }
+
+        .review-btn.bad.selected {
+            background: #ff445520;
+            border-color: #ff4455;
+            color: #ff4455;
+        }
+
+        .btn-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Comments */
+        .comments-section {
+            margin-bottom: 20px;
+        }
+
+        .comments-label {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .comments-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 12px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.9rem;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .comments-textarea:focus {
+            outline: none;
+            border-color: #00ff88;
+            box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.2);
+        }
+
+        .comments-textarea::placeholder {
+            color: #666;
+        }
+
+        /* Submit Section */
+        .submit-section {
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #00ff88, #00cc6a);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .validation-message {
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: none;
+            text-align: center;
+        }
+
+        .validation-message.error {
+            background: #ff445540;
+            border: 1px solid #ff4455;
+            color: #ff8899;
+        }
+
+        .validation-message.success {
+            background: #00ff8840;
+            border: 1px solid #00ff88;
+            color: #88ffaa;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 8px;
+            background: #333;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.2s ease;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #444;
+        }
+
+        .nav-btn:disabled {
+            background: #222;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1400px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .video-section, .review-section {
+                max-width: 100%;
+            }
+            
+            .review-section {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .review-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>Annotation Review - Good or Bad</h1>
+        </div>
+        <div>
+            <div class="progress-info">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ video.progress.percentage }}%"></div>
+                </div>
+                <div class="progress-text">{{ video.progress.current }} / {{ video.progress.total }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="video-section">
+                <div class="video-container">
+                    <iframe src="{{ video.embed_url }}" allowfullscreen></iframe>
+                </div>
+                <div class="video-info">
+                    <div class="video-title">{{ video.title }}</div>
+                    <div class="video-url">{{ video.url }}</div>
+                    
+                    <!-- Ground Truth Section -->
+                    <div class="ground-truth-section">
+                        <div class="ground-truth-title">Ground Truth Labels</div>
+                        <div class="ground-truth-labels">
+                            <div style="margin-bottom: 5px; font-size: 0.8rem; color: #ccc;">Content:</div>
+                            {% for gt in video.ground_truth.content %}
+                            <div class="ground-truth-tag">{{ gt.label }} ({{ gt.hierarchy }})</div>
+                            {% endfor %}
+                            
+                            <div style="margin-bottom: 5px; margin-left: 10px; font-size: 0.8rem; color: #ccc;">Format:</div>
+                            {% for gt in video.ground_truth.format %}
+                            <div class="ground-truth-tag">{{ gt.label }} ({{ gt.hierarchy }})</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-section">
+                <div class="review-title">Is this good for annotation?</div>
+                <div class="review-description">
+                    Review the video and ground truth labels. Will this produce good annotations?
+                </div>
+
+                <div class="review-buttons">
+                    <button class="review-btn good" onclick="selectReview('good')">
+                        <span class="btn-icon">👍</span>
+                        <span>Good</span>
+                    </button>
+                    <button class="review-btn bad" onclick="selectReview('bad')">
+                        <span class="btn-icon">👎</span>
+                        <span>Bad</span>
+                    </button>
+                </div>
+
+                <div class="comments-section">
+                    <label class="comments-label" for="comments">Notes (Optional):</label>
+                    <textarea 
+                        class="comments-textarea" 
+                        id="comments" 
+                        placeholder="Any notes about this video/annotation..."
+                    ></textarea>
+                </div>
+
+                <div class="submit-section">
+                    <div class="validation-message" id="validation-message"></div>
+                    
+                    <button class="submit-btn" id="submit-btn" onclick="submitReview()" disabled>
+                        Submit Review
+                    </button>
+                    
+                    <div class="navigation">
+                        <button class="nav-btn" onclick="previousVideo()" {% if video.progress.current <= 1 %}disabled{% endif %}>
+                            ← Previous
+                        </button>
+                        <button class="nav-btn" onclick="nextVideo()">
+                            Next →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Store existing review data
+        const existingReview = {{ existing_annotation_review | tojson }};
+        
+        // Track current selection
+        let selectedRating = null;
+
+        function selectReview(rating) {
+            // Remove previous selections
+            document.querySelectorAll('.review-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Select current button
+            const button = document.querySelector(`.review-btn.${rating}`);
+            button.classList.add('selected');
+            selectedRating = rating;
+            
+            // Enable submit button
+            updateSubmitButton();
+        }
+
+        function updateSubmitButton() {
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = !selectedRating;
+        }
+
+        function showValidationMessage(type, message) {
+            const msgElement = document.getElementById('validation-message');
+            msgElement.className = `validation-message ${type}`;
+            msgElement.textContent = message;
+            msgElement.style.display = 'block';
+            
+            setTimeout(() => {
+                msgElement.style.display = 'none';
+            }, 3000);
+        }
+
+        function submitReview() {
+            if (!selectedRating) {
+                showValidationMessage('error', 'Please select Good or Bad');
+                return;
+            }
+
+            const comments = document.getElementById('comments').value.trim();
+            const submitBtn = document.getElementById('submit-btn');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            fetch('/submit_annotation_review', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    video_id: '{{ video.Video }}',
+                    annotation_rating: selectedRating,
+                    comments: comments
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showValidationMessage('success', 'Review saved! Moving to next video...');
+                    
+                    // Reset submit button
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Review';
+                    
+                    // Move to next video after a short delay
+                    setTimeout(() => {
+                        const currentIndex = {{ video.progress.current }} - 1;
+                        window.location.href = `/annotation_review/${currentIndex + 1}`;
+                    }, 1000);
+                } 
+                else {
+                    showValidationMessage('error', data.error || 'Failed to save review');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Review';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showValidationMessage('error', 'Network error occurred');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Review';
+            });
+        }
+
+        function previousVideo() {
+            const currentIndex = {{ video.progress.current }} - 1;
+            if (currentIndex > 0) {
+                window.location.href = `/annotation_review/${currentIndex - 1}`;
+            }
+        }
+
+        function nextVideo() {
+            const currentIndex = {{ video.progress.current }} - 1;
+            window.location.href = `/annotation_review/${currentIndex + 1}`;
+        }
+
+        // Load existing review if it exists
+        function loadExistingReview() {
+            if (existingReview && existingReview.rating) {
+                selectReview(existingReview.rating);
+                
+                if (existingReview.comments) {
+                    document.getElementById('comments').value = existingReview.comments;
+                }
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadExistingReview();
+            updateSubmitButton();
+        });
+    </script>
+</body>
+</html>

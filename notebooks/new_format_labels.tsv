@@ -1,0 +1,35 @@
+tag	mapAnnotationHierarchy	mapAnnotation	definition
+animated.cartoon	Animations	Cartoon Characters	Animated videos featuring cartoon characters and storylines
+crafts.cutouts	Animations	Paper Cutouts	Videos using paper cutout figures for animation
+animated.comic	Animations	Comic Book Style	Videos presented in comic book panel format with sequential drawings
+animated.graphics	Animations	Motion Graphics	Animated text, shapes, and visual elements that move dynamically
+practicaldemonstration.cooking	Cooking	Cooking	Cooking or baking videos
+practicaldemonstration.engineering	Physical Demo	Physical Demo	Hands-on demonstrations of engineering, science, music or technical processes
+practicaldemonstration.science	Physical Demo	Physical Demo	Hands-on demonstrations of engineering, science, music or technical processes
+docustyle	Documentary Style (Mixed Format)	Documentary	Real-world footage exploring topics through interviews and authentic visuals
+gaming	Gaming	Gaming	Video game footage, gameplay, or gaming-related content
+animated.info	Infographics/Slidedeck	Infographics	Educational visuals using charts, graphs, and data visualizations
+animation.powerpoint	Infographics/Slidedeck	Slidedeck	Sequential slides with text and images, like PowerPoint presentations
+slides	Infographics/Slidedeck	Slidedeck	Sequential slides with text and images, like PowerPoint presentations
+board.chalkboard	Instructional	Chalkboard	Instruction using a dark board with white chalk writing
+board.whiteboard	Instructional	Whiteboard	Instruction using a white board with colored markers
+board.lightboard	Instructional	Glassboard	Writing that appears to float in mid-air on transparent surface
+writing.stylus	Instructional	Digital Writing (use of a cursor)	Text and drawings appearing on screen following a cursor or stylus
+writing.hand	Instructional	Writing Hand (No head visible)	Close-up view of a hand writing or drawing on a surface
+classroom	Instructional	Classroom Lecture	Traditional classroom setting with instructor and students
+rawfootage	Raw Footage	Raw Footage	Unedited, unstructured video clips without post-processing
+keystrokes	Screencast	Screencast	Computer screen capture showing software, websites, or digital interfaces
+screencast	Screencast	Screencast	Computer screen capture showing software, websites, or digital interfaces
+skit	Staged Performance	Skit/Parody/Sketch/Short Film	Short humorous performances with characters and situations
+conversation.casual	Simultaneous Presenters	Conversations	Discussions between people like podcasts, and interviews
+conversation.podcast	Simultaneous Presenters	Conversations	Discussions between people like podcasts, and interviews
+conversation.formal	Simultaneous Presenters	Conversations	Discussions between people like podcasts, and interviews
+interview.street	Simultaneous Presenters	Conversations	Discussions between people like podcasts, and interviews
+paneldiscussion.inperson	Simultaneous Presenters	Panel Discussion - In Person	Formal group discussions with multiple participants
+paneldiscussion.virtual	Simultaneous Presenters	Panel Discussion - Virtual	Virtual (eg: video call) group discussions with multiple participants
+persononstage	Single Presenter	Person on stage	Person presenting or performing on stage to an audience
+talkinghead.framecorner	Single Presenter	Talking Head - Corner	Presenter's face in small corner window of the frame
+talkinghead.frameregular	Single Presenter	Talking Head - Center	Person speaking directly to camera as main visual focus
+placeholderdisplay	Static Screen / No video	Static Screen / No video	Static image or minimal visuals with focus on audio content
+vlog	Video Journal (Vlogs)	Selfie Camera (Vlog)	Personal video diary shot with handheld camera
+pov.realworld	Video Journal (Vlogs)	Point of View Camera (Vlog)	Video shot from the perspective of the person experiencing it

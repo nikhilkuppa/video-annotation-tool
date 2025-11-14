@@ -1,0 +1,187 @@
+tag	Hierarchy1	mapAnnotationHierarchy	mapAnnotation
+edu.arts.architecture	Education	Architecture	Architecture
+edu.arts.literature	Education	Arts & Literature	Arts
+edu.arts.media	Education	Arts & Literature	Arts
+edu.arts.performing	Education	Arts & Literature	Arts
+edu.arts.visual	Education	Arts & Literature	Arts
+edu.arts.writing	Education	Arts & Literature	Arts
+edu.arts.arthistory	Education	Arts & Literature	Arts
+edu.arts.acting	Education	Arts & Literature	Arts
+edu.arts.music	Education	Arts & Literature	Music (Educational)
+edu.business.entrepreneurship	Education	Business & Economics	Business
+edu.business.management	Education	Business & Economics	Business
+edu.business.marketing	Education	Business & Economics	Business
+edu.business.analytics	Education	Business & Economics	Business
+edu.business.economics	Education	Business & Economics	Economics
+edu.business.finance	Education	Business & Economics	Finance
+edu.stem.engineering.computerscience	Education	Computer & Data Science	Computer Science
+edu.stem.engineering.datascience	Education	Computer & Data Science	Data Science
+edu.stem.engineering.aerospace	Education	Engineering	Engineering
+edu.stem.engineering.biomedical	Education	Engineering	Engineering
+edu.stem.engineering.chemical	Education	Engineering	Engineering
+edu.stem.engineering.electrical	Education	Engineering	Engineering
+edu.stem.engineering.electronics	Education	Engineering	Engineering
+edu.stem.engineering.mechanical	Education	Engineering	Engineering
+edu.stem.engineering.civil	Education	Engineering	Engineering
+edu.stem.engineering.environmental	Education	Engineering	Engineering
+edu.stem.engineering.marine	Education	Engineering	Engineering
+edu.stem.engineering.nuclear	Education	Engineering	Engineering
+edu.stem.engineering.industrial	Education	Engineering	Engineering
+edu.stem.engineering.materials	Education	Engineering	Engineering
+edu.stem.engineering.robotics	Education	Engineering	Engineering
+edu.stem.engineering.automotive	Education	Engineering	Engineering
+edu.stem.engineering.sustainability	Education	Engineering	Engineering
+edu.stem.engineering.telecommunications	Education	Engineering	Engineering
+edu.stem.engineering.agricultural	Education	Engineering	Engineering
+edu.stem.engineering.energy	Education	Engineering	Engineering
+edu.stem.engineering.systemsengineering	Education	Engineering	Engineering
+edu.stem.engineering.other	Education	Engineering	Engineering
+edu.stem.environment	Education	Environmental Sciences	Environmental Sciences
+edu.humanities.ethics	Education	Humanities	Philosophy
+edu.humanities.philosophy	Education	Humanities	Philosophy
+edu.humanities.religion	Education	Humanities	Religion
+edu.arts.languages	Education	Languages	Languages
+language.internationallanguage	Education	Languages	Languages
+language.teachinglanguage	Education	Languages	Languages
+edu.stem.biology.botany	Education	Life Sciences	Biology
+edu.stem.biology.ecology	Education	Life Sciences	Biology
+edu.stem.biology.genetics	Education	Life Sciences	Biology
+edu.stem.biology.marinebiology	Education	Life Sciences	Biology
+edu.stem.biology.microbiology	Education	Life Sciences	Biology
+edu.stem.biology.molecularbiology	Education	Life Sciences	Biology
+edu.stem.biology.zoology	Education	Life Sciences	Biology
+edu.stem.biology.cellbiology	Education	Life Sciences	Biology
+edu.stem.biology.evolutionarybiology	Education	Life Sciences	Biology
+edu.stem.biology.genomics	Education	Life Sciences	Biology
+edu.stem.biology.biophysics	Education	Life Sciences	Biology
+edu.stem.biology.bioinformatics	Education	Life Sciences	Biology
+edu.stem.biology.other	Education	Life Sciences	Biology
+edu.stem.biotechnology	Education	Life Sciences	Biology
+edu.stem.neuroscience	Education	Life Sciences	Biology
+edu.stem.math.algebra	Education	Mathematics	Mathematics
+edu.stem.math.calculus	Education	Mathematics	Mathematics
+edu.stem.math.geometry	Education	Mathematics	Mathematics
+edu.stem.math.statistics	Education	Mathematics	Mathematics
+edu.stem.math.arithmetic	Education	Mathematics	Mathematics
+edu.stem.math.trigonometry	Education	Mathematics	Mathematics
+edu.stem.math.numbertheory	Education	Mathematics	Mathematics
+edu.stem.math.probability	Education	Mathematics	Mathematics
+edu.stem.math.topology	Education	Mathematics	Mathematics
+edu.stem.math.combinatorics	Education	Mathematics	Mathematics
+edu.stem.math.linearalgebra	Education	Mathematics	Mathematics
+edu.stem.math.gametheory	Education	Mathematics	Mathematics
+edu.stem.math.settheory	Education	Mathematics	Mathematics
+edu.stem.math.differentialeqns	Education	Mathematics	Mathematics
+edu.stem.math.logic	Education	Mathematics	Mathematics
+edu.stem.math.other	Education	Mathematics	Mathematics
+edu.medicine.dentistry	Education	Medical Sciences	Medicine
+edu.medicine.nursing	Education	Medical Sciences	Medicine
+edu.medicine.pharmacy	Education	Medical Sciences	Medicine
+edu.medicine.surgery	Education	Medical Sciences	Medicine
+edu.medicine.internalmedicine	Education	Medical Sciences	Medicine
+edu.medicine.psychiatry	Education	Medical Sciences	Medicine
+edu.medicine.physiology	Education	Medical Sciences	Medicine
+edu.medicine.cardiology	Education	Medical Sciences	Medicine
+edu.medicine.neurology	Education	Medical Sciences	Medicine
+edu.medicine.radiology	Education	Medical Sciences	Medicine
+edu.medicine.gastroenterology	Education	Medical Sciences	Medicine
+edu.medicine.orthopedics	Education	Medical Sciences	Medicine
+edu.medicine.pediatrics	Education	Medical Sciences	Medicine
+edu.medicine.rheumatology	Education	Medical Sciences	Medicine
+edu.medicine.oncology	Education	Medical Sciences	Medicine
+edu.medicine.nephrology	Education	Medical Sciences	Medicine
+edu.medicine.endocrinology	Education	Medical Sciences	Medicine
+edu.medicine.haematology	Education	Medical Sciences	Medicine
+edu.medicine.immunology	Education	Medical Sciences	Medicine
+edu.medicine.respiratory	Education	Medical Sciences	Medicine
+edu.medicine.other	Education	Medical Sciences	Medicine
+edu.medicine.publichealth	Education	Medical Sciences	Public Health
+edu.stem.chemistry.analytical	Education	Physical Sciences	Chemistry
+edu.stem.chemistry.biochemistry	Education	Physical Sciences	Chemistry
+edu.stem.chemistry.inorganic	Education	Physical Sciences	Chemistry
+edu.stem.chemistry.organic	Education	Physical Sciences	Chemistry
+edu.stem.chemistry.physical	Education	Physical Sciences	Chemistry
+edu.stem.chemistry.materials	Education	Physical Sciences	Chemistry
+edu.stem.chemistry.nanotechnology	Education	Physical Sciences	Chemistry
+edu.stem.chemistry.other	Education	Physical Sciences	Chemistry
+edu.stem.physics.electromagnetism	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.mechanics	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.thermodynamics	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.quantum	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.relativity	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.optics	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.acoustics	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.nuclearphysics	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.computationalphysics	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.matter	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.particle	Education	Physical Sciences	Physics/Astronomy
+edu.stem.physics.other	Education	Physical Sciences	Physics/Astronomy
+edu.stem.astronomy	Education	Physical Sciences	Physics/Astronomy
+edu.social.archaeology	Education	Social Sciences	History
+edu.social.history	Education	Social Sciences	History
+edu.social.law	Education	Social Sciences	Law
+edu.social.politics	Education	Social Sciences	Political Science
+edu.social.psychology	Education	Social Sciences	Psychology
+edu.social.anthropology	Education	Social Sciences	Social Sciences
+edu.social.sociology	Education	Social Sciences	Social Sciences
+edu.education.pedagogy.teachingprinciples	Education	Teacher Training	Teaching
+edu.education.pedagogy.teachingtools	Education	Teacher Training	Teaching
+entertainment.comedy.improv	Entertainment	Comedy	Comedy
+entertainment.comedy.parody	Entertainment	Comedy	Comedy
+entertainment.comedy.sketch	Entertainment	Comedy	Comedy
+entertainment.comedy.standup	Entertainment	Comedy	Comedy
+entertainment.reality.competition	Entertainment	Competition	Competition
+lifestyle.food	Entertainment	Food & Cooking	Food
+skills.culinary.baking	Entertainment	Food & Cooking	Food
+skills.culinary.cooking	Entertainment	Food & Cooking	Food
+gaming.esports	Entertainment	Gaming	Gaming
+gaming.gameplay	Entertainment	Gaming	Gaming
+gaming.review	Entertainment	Gaming	Gaming
+entertainment.drama.musical	Entertainment	Movies, TV & Drama	Movies, Theatre & Drama
+entertainment.drama.shortfilm	Entertainment	Movies, TV & Drama	Movies, Theatre & Drama
+entertainment.movies.clips	Entertainment	Movies, TV & Drama	Movies, Theatre & Drama
+entertainment.movies.review	Entertainment	Movies, TV & Drama	Movies, Theatre & Drama
+entertainment.movies.trailer	Entertainment	Movies, TV & Drama	Movies, Theatre & Drama
+entertainment.music	Entertainment	Music & Performance	Music (Entertainment)
+entertainment.variety.talkshow	Entertainment	Quizzes, Celebrities & Late Night	Stories/Anecdotes/Celebrity Content
+entertainment.variety.latenight	Entertainment	Quizzes, Celebrities & Late Night	Stories/Anecdotes/Celebrity Content
+entertainment.variety.celebritycontent	Entertainment	Quizzes, Celebrities & Late Night	Stories/Anecdotes/Celebrity Content
+entertainment.sports.adventure	Entertainment	Sports & Adventure	Sports & Adventure
+entertainment.sports.extremes	Entertainment	Sports & Adventure	Sports & Adventure
+entertainment.sports.team	Entertainment	Sports & Adventure	Sports & Adventure
+entertainment.sports.individual	Entertainment	Sports & Adventure	Sports & Adventure
+entertainment.sports.other	Entertainment	Sports & Adventure	Sports & Adventure
+news.sports	Entertainment	Sports & Adventure	Sports & Adventure
+vlog.daily	Entertainment	Personal Anecdotes/Vlogs	Personal Anecdotes
+vlog.travel	Entertainment	Personal Anecdotes/Vlogs	Personal Anecdotes
+skills.diy.crafts	How-To & Tutorials	DIY & Crafts	DIY & Crafts
+skills.diy.homeimprovement	How-To & Tutorials	DIY & Crafts	DIY & Crafts
+skills.financial.personalfinance	How-To & Tutorials	Finance Tutorials	Finance Tutorials
+skills.digital.graphicdesign	How-To & Tutorials	Tech & Creative Tutorials	Design/Editing Tutorials
+skills.digital.videoediting	How-To & Tutorials	Tech & Creative Tutorials	Design/Editing Tutorials
+skills.digital.coding	How-To & Tutorials	Tech & Creative Tutorials	Tech Tutorials
+wellbeing.alternativemedicine	Lifestyle & Wellbeing	Alternative Health	Alternative Health
+lifestyle.style.beauty	Lifestyle & Wellbeing	Beauty & Fashion	Beauty & Fashion
+lifestyle.style.fashion	Lifestyle & Wellbeing	Beauty & Fashion	Beauty & Fashion
+wellbeing.fitness	Lifestyle & Wellbeing	Fitness & Nutrition	Fitness
+wellbeing.nutrition	Lifestyle & Wellbeing	Fitness & Nutrition	Nutrition
+lifestyle.home	Lifestyle & Wellbeing	Home & Garden	Home & Garden
+entertainment.reality.living	Lifestyle & Wellbeing	Lifestyle	Lifestyle
+wellbeing.mentalhealth	Lifestyle & Wellbeing	Mental Health	Mental Health
+growth.careerdevelopment	Lifestyle & Wellbeing	Personal Development	Personal Development
+growth.motivational	Lifestyle & Wellbeing	Personal Development	Personal Development
+entertainment.reality.dating	Lifestyle & Wellbeing	Relationships & Dating	Relationships
+news.business	News/Commentary	News	News
+news.domestic	News/Commentary	News	News
+news.entertainment	News/Commentary	News	News
+news.health	News/Commentary	News	News
+news.international	News/Commentary	News	News
+news.politics	News/Commentary	News	News
+news.technology	News/Commentary	News	News
+misc.conspiracy	Entertainment	Conspiracy	Conspiracy
+religious.spirituality	Religion & Spirituality	Religion & Spirituality	Religion & Spirituality
+religious.community	Religion & Spirituality	Religion & Spirituality	Religion & Spirituality
+religious.culture	Religion & Spirituality	Religion & Spirituality	Religion & Spirituality
+religious.guidelines	Religion & Spirituality	Religion & Spirituality	Religion & Spirituality
+misc.productreview	Reviews	Product Reviews	Product Reviews
+misc.unboxing	Reviews	Product Reviews	Product Reviews

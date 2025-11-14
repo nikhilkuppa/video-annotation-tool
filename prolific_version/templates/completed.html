@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Complete - Video Annotation Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f0f;
+            color: #ffffff;
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .completion-container {
+            text-align: center;
+            background: #1a1a1a;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: #00ff88;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .completion-title {
+            font-size: 2.5rem;
+            color: #00ff88;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .completion-message {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .completion-details {
+            background: #2a2a2a;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 4px solid #00ff88;
+        }
+
+        .completion-details h3 {
+            color: #00ff88;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .completion-details p {
+            color: #ddd;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .completion-code {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: #00ff88;
+            margin: 20px 0;
+            border: 2px solid #00ff88;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff88;
+            display: block;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .prolific-info {
+            background: #1a3a5c;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #4a9eff;
+        }
+
+        .prolific-info h3 {
+            color: #4a9eff;
+            margin-bottom: 10px;
+        }
+
+        .prolific-info p {
+            color: #ccc;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 768px) {
+            .completion-container {
+                padding: 30px 20px;
+            }
+            
+            .completion-title {
+                font-size: 2rem;
+            }
+            
+            .completion-message {
+                font-size: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="completion-container">
+        <div class="success-icon">🎉</div>
+        <h1 class="completion-title">Study Complete!</h1>
+        <p class="completion-message">
+            Excellent work! You have successfully completed all 30 video annotations. 
+            Your responses have been saved and will contribute to important research.
+        </p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">30</span>
+                <div class="stat-label">Videos Annotated</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">60</span>
+                <div class="stat-label">Content Labels</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">60</span>
+                <div class="stat-label">Format Labels</div>
+            </div>
+        </div>
+
+        <div class="completion-details">
+            <h3>Thank You for Your Participation!</h3>
+            <p>Your annotations will help advance research in video content analysis and machine learning. Each annotation you provided is valuable for training AI systems to better understand video content.</p>
+        </div>
+
+        <div class="prolific-info">
+            <h3>Next Steps</h3>
+            <p>You can now close this tab and return to Prolific to complete your submission. Your participation has been automatically recorded.</p>
+            <p><strong>Participant ID:</strong> {{ prolific_pid }}</p>
+        </div>
+    </div>
+</body>
+</html>
